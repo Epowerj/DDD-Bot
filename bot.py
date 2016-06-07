@@ -49,6 +49,8 @@ def main():
     dp.add_handler(CommandHandler("help", help))
     dp.add_handler(CommandHandler("ping", ping))
     dp.add_handler(CommandHandler("time", time))
+    db.add_handler(CommandHandler("roll", roll))
+    db.add_handler(CommandHandler("chatinfo", chatinfo))
 
     dp.add_error_handler(error)
 
