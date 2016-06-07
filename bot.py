@@ -5,6 +5,9 @@ from key import apikey
 import datetime
 import random
 
+tribow_id=106890603
+adventure_id=
+
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=logging.INFO)
@@ -33,12 +36,19 @@ def roll(bot, update):
 
 
 def chatinfo(bot, update):
-    bot.sendMessage(updage.message.chat_id, text="chat_id is "+str(updage.message.chat_id))
-    bot.sendMessage(updage.message.chat_id, text="user id is "+str(update.message.from_user.id))
+    bot.sendMessage(update.message.chat_id, text="chat_id is "+str(update.message.chat_id))
+    bot.sendMessage(update.message.chat_id, text="user id is "+str(update.message.from_user.id))
 
 
 def error(bot, update, error):
     print('Update "%s" caused error "%s"' % (update, error))
+
+
+def say(bot, update):
+    if update.message.from_user.id == tribow_id:
+        bot.sendMessage(adventure_id, text=update.message.text)
+    else:
+        bot.sendMessage(update.message.chat_id, text="You are not authorized")
 
 
 def main():
@@ -49,8 +59,8 @@ def main():
     dp.add_handler(CommandHandler("help", help))
     dp.add_handler(CommandHandler("ping", ping))
     dp.add_handler(CommandHandler("time", time))
-    db.add_handler(CommandHandler("roll", roll))
-    db.add_handler(CommandHandler("chatinfo", chatinfo))
+    dp.add_handler(CommandHandler("roll", roll))
+    dp.add_handler(CommandHandler("chatinfo", chatinfo))
 
     dp.add_error_handler(error)
 
