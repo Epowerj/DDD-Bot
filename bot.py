@@ -29,7 +29,12 @@ def time(bot, update):
 
 
 def roll(bot, update):
-    bot.sendMessage(update.message.chat_id, text=str(random.randint(1, 20))
+    bot.sendMessage(update.message.chat_id, text=str(random.randint(1, 20)))
+
+
+def chatinfo(bot, update):
+    bot.sendMessage(updage.message.chat_id, text="chat_id is "+str(updage.message.chat_id))
+    bot.sendMessage(updage.message.chat_id, text="user id is "+str(update.message.from_user.id))
 
 
 def error(bot, update, error):
