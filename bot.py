@@ -3,6 +3,7 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 import logging
 from key import apikey
 import datetime
+import random
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -25,6 +26,10 @@ def ping(bot, update):
 
 def time(bot, update):
     bot.sendMessage(update.message.chat_id, text=str(datetime.datetime.now()))
+
+
+def roll(bot, update):
+    bot.sendMessage(update.message.chat_id, text=str(random.randint(1, 20))
 
 
 def error(bot, update, error):
