@@ -6,7 +6,7 @@ import datetime
 import random
 
 tribow_id=106890603
-adventure_id=
+adventure_id=12345
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -32,7 +32,7 @@ def time(bot, update):
 
 
 def roll(bot, update):
-    bot.sendMessage(update.message.chat_id, text=str(random.randint(1, 20)))
+    bot.sendMessage(update.message.chat_id, reply_to_message_id=update.message.message_id, text=str(random.randint(1, 20)))
 
 
 def chatinfo(bot, update):
