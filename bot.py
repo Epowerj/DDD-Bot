@@ -2,11 +2,13 @@
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 import logging
 from key import apikey
-import datetime
-import random
+import datetime, random, json
 
-tribow_id = 106890603
-adventure_id = -1001030866550
+#tribow_id = 106890603
+#adventure_id = -1001030866550
+
+admin_id = 83218061
+chatroom_id = -146928430
 
 savepath = "info.dict"
 info = {}
@@ -30,7 +32,7 @@ def save_info():
 
 
 def start(bot, update):
-    bot.sendMessage(update.message.chat_id, text="Hey Tribow!")
+    bot.sendMessage(update.message.chat_id, text="Hey!")
 
 
 def help(bot, update):
@@ -59,14 +61,44 @@ def error(bot, update, error):
 
 
 def say(bot, update):
-    if update.message.from_user.id == tribow_id:
+    if update.message.from_user.id == admin_id:
         commandtext = update.message.text.split(' ', 1)
-        bot.sendMessage(adventure_id, text=commandtext[1])
+        bot.sendMessage(chatroom_id, text=commandtext[1])
+    else:
+        bot.sendMessage(update.message.chat_id, text="You are not authorized")
+
+
+def info(bot, update):
+    global info
+
+    commandtext = update.message.text.split(' ', 1)[1]
+
+    if commandtext in info:
+        global info
+        bot.sendMessage(update.message.chat_id, text=info[commandtext])
+    else:
+        bot.sendMessage(update.message.chat_id, text="No info found on '"+commandtext+"'")
+
+
+def setinfo(bot, update):
+    global info
+
+    if update.message.from_user.id == admin_id:
+        commandtext = update.message.text.split(' ', 2)
+        info[commandtext[1]] = commandtext[2]
+
+        save_info()
     else:
         bot.sendMessage(update.message.chat_id, text="You are not authorized")
 
 
 def main():
+    global info
+
+    print(info)
+    load_info()
+    print(info)
+
     updater = Updater(apikey)
     dp = updater.dispatcher
 
@@ -77,6 +109,8 @@ def main():
     dp.add_handler(CommandHandler("roll", roll))
     dp.add_handler(CommandHandler("chatinfo", chatinfo))
     dp.add_handler(CommandHandler("say", say))
+    dp.add_handler(CommandHandler("info", info))
+    dp.add_handler(CommandHandler("setinfo", setinfo))
 
     dp.add_error_handler(error)
 
