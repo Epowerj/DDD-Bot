@@ -1,14 +1,9 @@
 
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackQueryHandler
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 import logging
-from key import apikey
-import datetime, random, json
-
-#tribow_id = 106890603
-#adventure_id = -1001030866550
-
-admin_id = 83218061
-chatroom_id = -146928430
+from key import apikey, admin_id, chatroom_id
+import datetime, json, random, time
 
 savepath = "info.dict"
 info = {}
@@ -111,6 +106,8 @@ def main():
     dp.add_handler(CommandHandler("say", say))
     dp.add_handler(CommandHandler("info", info))
     dp.add_handler(CommandHandler("setinfo", setinfo))
+
+    dp.add_handler(MessageHandler([Filters.text], parse))
 
     dp.add_error_handler(error)
 
