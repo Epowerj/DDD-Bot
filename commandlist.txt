@@ -1,3 +1,3 @@
-ping - Test bot response
-time - See bot's time
-roll - Roll the dice;
+info - See info on a certain subject
+action - Set your action for the turn
+roll - Set your action as well as roll dice
