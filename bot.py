@@ -115,7 +115,6 @@ def action(bot, update, roll=-1):
     else:
         bot.sendMessage(update.message.chat_id, reply_to_message_id=update.message.message_id, text="Your current action is: '" + next_action[str(update.message.from_user.id)] + "' \n Do /action <your next move> to update")
 
-
 def setinfo(bot, update):
     global char_info
 
