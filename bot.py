@@ -111,7 +111,10 @@ def action(bot, update, roll=-1):
         if roll == -1:
             bot.sendMessage(update.message.chat_id, reply_to_message_id=update.message.message_id, text="Action saved")
         else:
-            bot.sendMessage(update.message.chat_id, reply_to_message_id=update.message.message_id, text="Your roll was " + str(roll))
+            if roll == 1:
+                bot.sendMessage(update.message.chat_id, reply_to_message_id=update.message.message_id, text="Your roll was " + str(roll) + "\nGood luck, lol")
+            else:
+                bot.sendMessage(update.message.chat_id, reply_to_message_id=update.message.message_id, text="Your roll was " + str(roll))  
     else:
         bot.sendMessage(update.message.chat_id, reply_to_message_id=update.message.message_id, text="Your current action is: '" + next_action[str(update.message.from_user.id)] + "' \n Do /action <your next move> to update")
 
