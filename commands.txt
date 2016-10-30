@@ -1,3 +1,0 @@
-roll - roll the dice
-info - see info on a topic
-qroll - do a quick roll
