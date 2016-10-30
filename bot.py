@@ -55,6 +55,11 @@ def time(bot, update):
 def roll(bot, update):
    action(bot, update, random.randint(1, 20))
 
+   
+def qroll(bot, update):
+    roll = random.randint(1, 20)
+    bot.sendMessage(update.message.chat_id, reply_to_message_id=update.message.message_id, text="Your roll was " + str(roll))
+   
 
 def chatinfo(bot, update):
     bot.sendMessage(update.message.chat_id, text="chat_id is "+str(update.message.chat_id))
@@ -168,6 +173,7 @@ def main():
     dp.add_handler(CommandHandler("ping", ping))
     dp.add_handler(CommandHandler("time", time))
     dp.add_handler(CommandHandler("roll", roll))
+    dp.add_handler(CommandHandler("qroll", qroll))
     dp.add_handler(CommandHandler("chatinfo", chatinfo))
     dp.add_handler(CommandHandler("say", say))
     dp.add_handler(CommandHandler("info", info))
