@@ -1,0 +1,6 @@
+{
+  "name": "DDD-Bot",
+  "description": "A Telegram bot that handles actions and rolls for a roleplaying game",
+  "repository": "https://github.com/Epowerj/DDD-Bot",
+  "keywords": ["python", "telegram", "chat bot" ]
+}
