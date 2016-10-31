@@ -4,11 +4,6 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from key import apikey, admin_id, chatroom_id
 import os, logging, datetime, json, random, time, psycopg2, urlparse2
 
-char_info = {}
-char_info_savepath = "info.dict"
-
-next_action = {}
-next_action_savepath = "actions.dict"
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -17,22 +12,17 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 logger = logging.getLogger(__name__)
 
 
-def load_info():
-    global char_info
-    global next_action
-
-    save = open(char_info_savepath, 'r')
-    char_info = json.load(save)
-
-    save = open(next_action_savepath, 'r')
-    next_action = json.load(save)
-
-def save_info():
-    save = open(char_info_savepath, 'w')
-    json.dump(char_info, save)
-
-    save = open(next_action_savepath, 'w')
-    json.dump(next_action, save)
+def db_connect():
+    #connect to the database
+    urlparse.uses_netloc.append("postgres")
+    url = urlparse.urlparse(os.environ["DATABASE_URL"])
+    conn = psycopg2.connect(
+        database=url.path[1:],
+        user=url.username,
+        password=url.password,
+        host=url.hostname,
+        port=url.port
+    )
 
 
 def start(bot, update):
@@ -173,11 +163,6 @@ def main():
                       port=PORT,
                       url_path=TOKEN)
     updater.bot.setWebhook("https://triaddd-bot.herokuapp.com/" + TOKEN)
-    #updater.idle()
-
-    #old long polling method
-    #updater = Updater(apikey)
-    #dp = updater.dispatcher
 
     dp.add_handler(CommandHandler("start", start))
     dp.add_handler(CommandHandler("help", help))
@@ -197,9 +182,6 @@ def main():
 
     dp.add_error_handler(error)
 
-    #updater.start_polling(timeout=5)
-
-    # Run the bot until the user presses Ctrl-C or the process receives SIGINT, SIGTERM or SIGABRT
     updater.idle()
 
 
