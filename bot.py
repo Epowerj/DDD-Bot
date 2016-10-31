@@ -54,11 +54,11 @@ def time(bot, update):
 def roll(bot, update):
    action(bot, update, random.randint(1, 20))
 
-   
+
 def qroll(bot, update):
     roll = random.randint(1, 20)
     bot.sendMessage(update.message.chat_id, reply_to_message_id=update.message.message_id, text="Your roll was " + str(roll))
-   
+
 
 def chatinfo(bot, update):
     bot.sendMessage(update.message.chat_id, text="chat_id is "+str(update.message.chat_id))
@@ -167,6 +167,7 @@ def main():
     TOKEN = apikey
     PORT = int(os.environ.get('PORT', '5000'))
     updater = Updater(TOKEN)
+    dp = updater.dispatcher
     # add handlers
     updater.start_webhook(listen="0.0.0.0",
                       port=PORT,
@@ -174,8 +175,9 @@ def main():
     updater.bot.setWebhook("https://triaddd-bot.herokuapp.com/" + TOKEN)
     updater.idle()
 
+    #old long polling method
     #updater = Updater(apikey)
-    dp = updater.dispatcher
+    #dp = updater.dispatcher
 
     dp.add_handler(CommandHandler("start", start))
     dp.add_handler(CommandHandler("help", help))
