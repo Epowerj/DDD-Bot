@@ -173,7 +173,7 @@ def main():
                       port=PORT,
                       url_path=TOKEN)
     updater.bot.setWebhook("https://triaddd-bot.herokuapp.com/" + TOKEN)
-    updater.idle()
+    #updater.idle()
 
     #old long polling method
     #updater = Updater(apikey)
