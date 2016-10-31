@@ -1,9 +1,8 @@
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackQueryHandler
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
-import logging
 from key import apikey, admin_id, chatroom_id
-import datetime, json, random, time
+import os, logging, datetime, json, random, time, psycopg2, urlparse2
 
 char_info = {}
 char_info_savepath = "info.dict"
@@ -165,7 +164,17 @@ def main():
     print(char_info)
     print(next_action)
 
-    updater = Updater(apikey)
+    TOKEN = apikey
+    PORT = int(os.environ.get('PORT', '5000'))
+    updater = Updater(TOKEN)
+    # add handlers
+    updater.start_webhook(listen="0.0.0.0",
+                      port=PORT,
+                      url_path=TOKEN)
+    updater.bot.setWebhook("https://triaddd-bot.herokuapp.com/" + TOKEN)
+    updater.idle()
+
+    #updater = Updater(apikey)
     dp = updater.dispatcher
 
     dp.add_handler(CommandHandler("start", start))
