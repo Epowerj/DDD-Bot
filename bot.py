@@ -197,7 +197,7 @@ def main():
 
     dp.add_error_handler(error)
 
-    updater.start_polling(timeout=5)
+    #updater.start_polling(timeout=5)
 
     # Run the bot until the user presses Ctrl-C or the process receives SIGINT, SIGTERM or SIGABRT
     updater.idle()
