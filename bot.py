@@ -24,6 +24,12 @@ def db_connect():
         port=url.port
     )
 
+    #check if table for the app exists or not
+    cur.execute("select exists(select * from information_schema.tables where table_name=%s)", (str(os.environ.get("APPNAME"),))
+
+    if not cur.fetchone()[0]: #if it doesn't exists
+        cur.execute("CREATE TABLE " + str(os.environ.get("APPNAME") + "( \'info\' VARCHAR )")
+
 
 def start(bot, update):
     bot.sendMessage(update.message.chat_id, text="Hey!")
@@ -108,7 +114,7 @@ def action(bot, update, roll=-1):
             if roll == 1:
                 bot.sendMessage(update.message.chat_id, reply_to_message_id=update.message.message_id, text="Your roll was " + str(roll) + "\nGood luck, lol")
             else:
-                bot.sendMessage(update.message.chat_id, reply_to_message_id=update.message.message_id, text="Your roll was " + str(roll))  
+                bot.sendMessage(update.message.chat_id, reply_to_message_id=update.message.message_id, text="Your roll was " + str(roll))
     else:
         bot.sendMessage(update.message.chat_id, reply_to_message_id=update.message.message_id, text="Your current action is: '" + next_action[str(update.message.from_user.id)] + "' \n Do /action <your next move> to update")
 
@@ -150,7 +156,7 @@ def main():
     global char_info
     global next_action
 
-    load_info()
+    db_connect()
     print(char_info)
     print(next_action)
 
