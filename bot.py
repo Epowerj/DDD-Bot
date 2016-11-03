@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 def db_connect():
     #connect to the database
-    urlparse.urlparse.uses_netloc.append("postgres")
+    urlparse.uses_netloc.append("postgres")
     url = urlparse.urlparse(os.environ["DATABASE_URL"])
     conn = psycopg2.connect(
         database=url.path[1:],
