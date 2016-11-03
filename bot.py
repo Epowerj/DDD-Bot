@@ -25,10 +25,10 @@ def db_connect():
     )
 
     #check if table for the app exists or not
-    cur.execute("select exists(select * from information_schema.tables where table_name=%s)", (str(os.environ.get("APPNAME"),))
+    cur.execute("select * from information_schema.tables where table_name=%s", (str(os.environ.get("APPNAME"),)))
 
-    if not (cur.fetchone()[0]): #if it doesn't exists
-        cur.execute("CREATE TABLE " + str(os.environ.get("APPNAME") + "( \'info\' VARCHAR )")
+    if not (bool(cur.rowcount)): #if it doesn't exists
+        cur.execute("CREATE TABLE " + str(os.environ.get("APPNAME") + "( \'info\' VARCHAR )"))
 
 
 def start(bot, update):
