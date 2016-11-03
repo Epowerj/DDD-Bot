@@ -2,7 +2,8 @@
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackQueryHandler
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from key import apikey, admin_id, chatroom_id
-import os, logging, datetime, json, random, time, psycopg2, urlparse2
+from urllib.parse import urlparse
+import os, logging, datetime, json, random, time, psycopg2
 
 
 # Enable logging
@@ -14,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 def db_connect():
     #connect to the database
-    urlparse.uses_netloc.append("postgres")
+    urlparse.urlparse.uses_netloc.append("postgres")
     url = urlparse.urlparse(os.environ["DATABASE_URL"])
     conn = psycopg2.connect(
         database=url.path[1:],
