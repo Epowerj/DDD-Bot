@@ -35,7 +35,7 @@ def db_connect():
     #check if table for the app exists or not
     cur.execute("SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = '" + table_name + "');")
 
-    cur.fetchone()
+    print(cur.fetchone())
 
     #TODO fix if statement vvv
     if not (bool(cur.rowcount)): #if it doesn't exist
