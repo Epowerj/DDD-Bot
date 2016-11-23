@@ -37,7 +37,7 @@ def db_connect():
 
     if not (bool(cur.rowcount)): #if it doesn't exist
         print("Table not found, creating new one")
-        cur.execute("CREATE TABLE " + str(os.environ.get("APPNAME") + " ( \'info\' VARCHAR )"))
+        cur.execute("CREATE TABLE " + str(os.environ.get("APPNAME") + " (id serial PRIMARY KEY, info varchar, data varchar);"))
 
 
 def db_disconnect():
