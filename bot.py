@@ -35,11 +35,11 @@ def db_connect():
     #check if table for the app exists or not
     cur.execute("SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = '" + table_name + "');")
 
-    cur.execute("SELECT * FROM " + table_name + ";")
-
     if not (bool(cur.rowcount)): #if it doesn't exist
         print("Table not found, creating new one")
         cur.execute("CREATE TABLE " + table_name + " (id serial PRIMARY KEY, info varchar, data varchar);")
+
+    cur.execute("SELECT * FROM " + table_name + ";")
 
 
 def db_disconnect():
