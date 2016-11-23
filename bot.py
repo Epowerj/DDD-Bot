@@ -158,12 +158,7 @@ def clearactions(bot, update):
 
 
 def main():
-    global char_info
-    global next_action
-
     db_connect()
-    print(char_info)
-    print(next_action)
 
     TOKEN = apikey
     PORT = int(os.environ.get('PORT', '5000'))
