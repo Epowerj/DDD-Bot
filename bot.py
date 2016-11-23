@@ -28,6 +28,11 @@ def db_connect():
     cur = conn.cursor()
 
     #check if table for the app exists or not
+    cur.execute("SELECT EXISTS (
+       SELECT 1
+       FROM   information_schema.tables
+       WHERE    table_name = '" + str(os.environ.get("APPNAME")) + "'
+    );")
     cur.execute("select * from information_schema.tables where table_name=" + str(os.environ.get("APPNAME")))
 
     if not (bool(cur.rowcount)): #if it doesn't exist
