@@ -30,7 +30,7 @@ def db_connect():
     #check if table for the app exists or not
     cur.execute("select * from information_schema.tables where table_name=" + str(os.environ.get("APPNAME")))
 
-    if not (bool(cur.rowcount)): #if it doesn't exists
+    if not (bool(cur.rowcount)): #if it doesn't exist
         cur.execute("CREATE TABLE " + str(os.environ.get("APPNAME") + "( \'info\' VARCHAR )"))
 
 
