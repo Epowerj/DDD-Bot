@@ -1,7 +1,7 @@
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackQueryHandler
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
-from key import apikey, admin_id, chatroom_id
+from key import apikey, admin_id, chatroom_id, table_name
 from urllib.parse import urlparse
 import os, logging, datetime, json, random, time, psycopg2
 
@@ -33,13 +33,13 @@ def db_connect():
     cur = conn.cursor()
 
     #check if table for the app exists or not
-    cur.execute("SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = '" + str(os.environ.get("APPNAME")) + "');")
+    cur.execute("SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = '" + table_name + "');")
 
-    cur.execute("SELECT * FROM " + str(os.environ.get("APPNAME")) + ";")
+    cur.execute("SELECT * FROM " + table_name + ";")
 
     if not (bool(cur.rowcount)): #if it doesn't exist
         print("Table not found, creating new one")
-        cur.execute("CREATE TABLE " + str(os.environ.get("APPNAME") + " (id serial PRIMARY KEY, info varchar, data varchar);"))
+        cur.execute("CREATE TABLE " + table_name + " (id serial PRIMARY KEY, info varchar, data varchar);"))
 
 
 def db_disconnect():
