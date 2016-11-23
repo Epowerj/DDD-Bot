@@ -5,6 +5,8 @@ from key import apikey, admin_id, chatroom_id
 from urllib.parse import urlparse
 import os, logging, datetime, json, random, time, psycopg2
 
+conn = False
+cur = False
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -17,6 +19,8 @@ def db_connect():
     #connect to the database
     #urlparse.uses_netloc.append("postgres")
     url = urlparse(os.environ["DATABASE_URL"])
+
+    global conn
     conn = psycopg2.connect(
         database=url.path[1:],
         user=url.username,
@@ -25,6 +29,7 @@ def db_connect():
         port=url.port
     )
 
+    global cur
     cur = conn.cursor()
 
     #check if table for the app exists or not
@@ -32,7 +37,16 @@ def db_connect():
 
     if not (bool(cur.rowcount)): #if it doesn't exist
         print("Table not found, creating new one")
-        cur.execute("CREATE TABLE " + str(os.environ.get("APPNAME") + "( \'info\' VARCHAR )"))
+        cur.execute("CREATE TABLE " + str(os.environ.get("APPNAME") + " ( \'info\' VARCHAR )"))
+
+
+def db_disconnect():
+    cur.close()
+    conn.close()
+
+
+def add_info():
+    cur.execute("INSERT INTO ")
 
 
 def start(bot, update):
@@ -189,6 +203,8 @@ def main():
     dp.add_error_handler(error)
 
     updater.idle()
+
+    db_disconnect()
 
 
 if __name__ == '__main__':
