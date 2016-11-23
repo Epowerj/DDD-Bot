@@ -43,6 +43,9 @@ def db_connect():
 
 
 def db_disconnect():
+    global cur
+    global conn
+
     cur.close()
     conn.close()
 
