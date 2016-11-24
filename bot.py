@@ -160,6 +160,8 @@ def setinfo(bot, update):
 
         if not (cur.fetchone()):
             cur.execute("INSERT INTO " + table_name + " (info, data) VALUES (" + commandtext[1].lower() + ", " + commandtext[2] + ")")
+        else:
+            cur.execute("UPDATE " + table_name + " SET data='" + commandtext[2] + "' WHERE info='" + commandtext[1].lower() + "'")
 
         bot.sendMessage(update.message.chat_id, text="Info saved")
     else:
