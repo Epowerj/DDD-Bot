@@ -35,7 +35,7 @@ def db_connect():
     #check if table for the app exists or not
     cur.execute("SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = '" + table_name + "');")
 
-    if (cur.fetchone()): #if it doesn't exist
+    if not (cur.fetchone()): #if it doesn't exist
         print("Table not found, creating new one")
         cur.execute("CREATE TABLE " + table_name + " (id serial PRIMARY KEY, info varchar, data varchar);")
 
@@ -151,9 +151,12 @@ def setinfo(bot, update):
 
     if update.message.from_user.id == admin_id:
         commandtext = update.message.text.split(' ', 2)
-        char_info[commandtext[1].lower()] = commandtext[2]
+        #char_info[commandtext[1].lower()] = commandtext[2]
 
-        save_info()
+        cur.execute("SELECT EXISTS (SELECT 1 FROM " + table_name + " where info = '" + commandtext[1] + "')")
+
+        if not (cur.fetchone()):
+            cur.execute("INSERT INTO " + table_name + " (info, data) VALUES (" + commandtext[1].lower() + ", " + commandtext[2] + ")")
 
         bot.sendMessage(update.message.chat_id, text="Info saved")
     else:
