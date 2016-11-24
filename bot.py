@@ -112,8 +112,11 @@ def info(bot, update):
     if len(commandtext) >= 2:
         commandtext = commandtext[1].lower()
 
-        if commandtext in char_info:
-            bot.sendMessage(update.message.chat_id, text=char_info[commandtext])
+        cur.execute("SELECT EXISTS (SELECT 1 FROM " + table_name + " where info = '" + commandtext + "')")
+
+        if (cur.fetchone()):
+            cur.execute("SELECT data FROM " + table_name + " where info = '" + commandtext + "'")
+            bot.sendMessage(update.message.chat_id, text=cur.fetchone())
         else:
             bot.sendMessage(update.message.chat_id, text="No info found on '"+commandtext+"'")
     else:
