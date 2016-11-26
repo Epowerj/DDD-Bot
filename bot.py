@@ -116,9 +116,12 @@ def info(bot, update):
         cur.execute("SELECT EXISTS (SELECT 1 FROM " + table_name + " where info = '" + commandtext + "')")
 
         if (cur.fetchone()):
+            print("Info exists")
             cur.execute("SELECT data FROM " + table_name + " where info = '" + commandtext + "'")
-            bot.sendMessage(update.message.chat_id, text=cur.fetchone())
+            result = cur.fetchone()
+            bot.sendMessage(update.message.chat_id, text=result)
         else:
+            print("Info not found")
             bot.sendMessage(update.message.chat_id, text="No info found on '"+commandtext+"'")
     else:
         bot.sendMessage(update.message.chat_id, text="Usage: /info <topic>")
@@ -137,7 +140,7 @@ def action(bot, update, roll=-1):
         else:
             next_action[str(update.message.from_user.id)] = update.message.from_user.first_name + ' - ' + str(roll) + ' - ' + commandtext
 
-        save_info()
+        #save_info()
 
         if roll == -1:
             bot.sendMessage(update.message.chat_id, reply_to_message_id=update.message.message_id, text="Action saved")
@@ -160,10 +163,12 @@ def setinfo(bot, update):
         cur.execute("SELECT EXISTS (SELECT 1 FROM " + table_name + " where info = '" + commandtext[1] + "')")
 
         if not (cur.fetchone()):
+            print("Creating info entry...")
             cur.execute("INSERT INTO " + table_name + " (info, data) VALUES (" + commandtext[1].lower() + ", " + commandtext[2] + ")")
             global conn
             conn.commit()
         else:
+            print("Updating info entry...")
             cur.execute("UPDATE " + table_name + " SET data='" + commandtext[2] + "' WHERE info='" + commandtext[1].lower() + "'")
             global conn
             conn.commit()
