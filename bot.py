@@ -122,6 +122,7 @@ def info(bot, update):
             print("Info exists")
             cur.execute("SELECT data FROM " + table_name + " where info = '" + commandtext + "'")
             result = cur.fetchone()
+            print(result)
             bot.sendMessage(update.message.chat_id, text=result)
         else:
             print("Info not found")
