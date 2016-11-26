@@ -38,6 +38,7 @@ def db_connect():
     if cur.fetchone(): #if it doesn't exist
         print("Table not found, creating new one")
         cur.execute("CREATE TABLE " + table_name + " (id serial PRIMARY KEY, info varchar, data varchar);")
+        conn.commit()
 
     cur.execute("SELECT * FROM " + table_name + ";")
     results = cur.fetchall()
@@ -160,8 +161,12 @@ def setinfo(bot, update):
 
         if not (cur.fetchone()):
             cur.execute("INSERT INTO " + table_name + " (info, data) VALUES (" + commandtext[1].lower() + ", " + commandtext[2] + ")")
+            global conn
+            conn.commit()
         else:
             cur.execute("UPDATE " + table_name + " SET data='" + commandtext[2] + "' WHERE info='" + commandtext[1].lower() + "'")
+            global conn
+            conn.commit()
 
         bot.sendMessage(update.message.chat_id, text="Info saved")
     else:
