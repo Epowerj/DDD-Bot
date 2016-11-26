@@ -46,6 +46,9 @@ def db_connect():
     cur.execute("SELECT * FROM " + table_name + ";")
     results = cur.fetchall()
 
+    print("List: ")
+    print(results)
+
     for result in results:
         print(result)
 
