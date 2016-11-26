@@ -117,8 +117,10 @@ def info(bot, update):
         commandtext = commandtext[1].lower()
 
         cur.execute("SELECT EXISTS (SELECT 1 FROM " + table_name + " where info = '" + commandtext + "')")
-
-        if (cur.fetchone()):
+        result = cur.fetchone()
+        print(result)
+        
+        if (result[0]):
             print("Info exists")
             cur.execute("SELECT data FROM " + table_name + " where info = '" + commandtext + "'")
             result = cur.fetchone()
