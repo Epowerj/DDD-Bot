@@ -4,6 +4,7 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, Callb
 from key import apikey, admin_id, chatroom_id, table_name
 from urllib.parse import urlparse
 import os, logging, datetime, json, random, time
+from pymongo import MongoClient
 
 char_info = {}
 char_info_savepath = "info.dict"
@@ -22,6 +23,13 @@ def load_info():
     global char_info
     global next_action
 
+    client = MongoClient(str(os.environ["MONGODB_URI"]))
+    db = client[str(chatroom_id)]
+
+    char_collection = db.char
+
+    char_collection.find_one()
+
     save = open(char_info_savepath, 'r')
     char_info = json.load(save)
 
@@ -29,6 +37,8 @@ def load_info():
     next_action = json.load(save)
 
 def save_info():
+    #db['collection'].insert_one({dict})
+
     save = open(char_info_savepath, 'w')
     json.dump(char_info, save)
 
@@ -123,7 +133,6 @@ def action(bot, update, roll=-1):
                 bot.sendMessage(update.message.chat_id, reply_to_message_id=update.message.message_id, text="Your roll was " + str(roll))
     else:
         bot.sendMessage(update.message.chat_id, reply_to_message_id=update.message.message_id, text="Your current action is: '" + next_action[str(update.message.from_user.id)] + "' \n Do /action <your next move> to update")
-
 
 
 def setinfo(bot, update):
