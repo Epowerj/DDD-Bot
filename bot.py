@@ -1,9 +1,9 @@
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackQueryHandler
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup
+#from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from key import apikey, admin_id, chatroom_id, table_name
 from urllib.parse import urlparse
-import os, logging, datetime, json, random, time, psycopg2
+import os, logging, datetime, json, random, time
 
 conn = False
 cur = False
@@ -13,52 +13,6 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
                     level=logging.INFO)
 
 logger = logging.getLogger(__name__)
-
-
-def db_connect():
-    #connect to the database
-    #urlparse.uses_netloc.append("postgres")
-    url = urlparse(os.environ["DATABASE_URL"])
-
-    global conn
-    conn = psycopg2.connect(
-        database=url.path[1:],
-        user=url.username,
-        password=url.password,
-        host=url.hostname,
-        port=url.port
-    )
-
-    global cur
-    cur = conn.cursor()
-
-    #check if table for the app exists or not
-    cur.execute("SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = '" + table_name + "');")
-
-    result = cur.fetchone()
-    print(result)
-    
-    if not result[0]: #if it doesn't exist
-        print("Table not found, creating new one")
-        cur.execute("CREATE TABLE " + table_name + " (id serial PRIMARY KEY, info varchar, data varchar);")
-        conn.commit()
-
-    cur.execute("SELECT * FROM " + table_name + ";")
-    results = cur.fetchall()
-
-    print("List: ")
-    print(results)
-
-    for result in results:
-        print(result)
-
-
-def db_disconnect():
-    global cur
-    global conn
-
-    cur.close()
-    conn.close()
 
 
 def add_info():
@@ -108,7 +62,8 @@ def say(bot, update):
 
 
 def parse(bot, update):
-    print("Message from " + update.message.from_user.first_name + "(" + str(update.message.from_user.id) + "): " + update.message.text + " (" + str(update.message.message_id) + ")")
+    print("Message from " + update.message.from_user.first_name + "(" + str(update.message.from_user.id) + "): " +
+          update.message.text + " (" + str(update.message.message_id) + ")")
 
 
 def info(bot, update):
@@ -208,8 +163,6 @@ def clearactions(bot, update):
 
 
 def main():
-    db_connect()
-
     TOKEN = apikey
     PORT = int(os.environ.get('PORT', '5000'))
     updater = Updater(TOKEN)
@@ -239,8 +192,6 @@ def main():
     dp.add_error_handler(error)
 
     updater.idle()
-
-    db_disconnect()
 
 
 if __name__ == '__main__':
