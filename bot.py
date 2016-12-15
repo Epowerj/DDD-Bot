@@ -36,7 +36,7 @@ def save_info():
     global next_action
     global db
 
-    #db['collection'].insert_one({dict})
+    db.charinfo.insert_one(char_info)
 
 
 def start(bot, update):
