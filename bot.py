@@ -6,11 +6,9 @@ from urllib.parse import urlparse
 import os, logging, datetime, json, random, time
 from pymongo import MongoClient
 
+db = 0
 char_info = {}
-char_info_savepath = "info.dict"
-
 next_action = {}
-next_action_savepath = "actions.dict"
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -22,28 +20,23 @@ logger = logging.getLogger(__name__)
 def load_info():
     global char_info
     global next_action
+    global db
 
     client = MongoClient(str(os.environ["MONGODB_URI"]))
     db = client[str(chatroom_id)]
 
-    char_collection = db.char
+    char_collection = db.charinfo
 
-    char_collection.find_one()
+    char_info = char_collection.find_one()
+    print(char_info)
 
-    save = open(char_info_savepath, 'r')
-    char_info = json.load(save)
-
-    save = open(next_action_savepath, 'r')
-    next_action = json.load(save)
 
 def save_info():
+    global char_info
+    global next_action
+    global db
+
     #db['collection'].insert_one({dict})
-
-    save = open(char_info_savepath, 'w')
-    json.dump(char_info, save)
-
-    save = open(next_action_savepath, 'w')
-    json.dump(next_action, save)
 
 
 def start(bot, update):
@@ -157,6 +150,7 @@ def listactions(bot, update):
             bot.sendMessage(update.message.chat_id, text=next_action[action])
     else:
             bot.sendMessage(update.message.chat_id, text="You are not authorized")
+
 
 def clearactions(bot, update):
     global next_action
