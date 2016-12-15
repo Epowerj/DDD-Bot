@@ -22,8 +22,8 @@ def load_info():
     global next_action
     global db
 
-    client = MongoClient(str(os.environ["MONGODB_URI"]))
-    db = client[str(chatroom_id)]
+    client = MongoClient(str(os.environ["MONGODB_URI"]))  # connect to the server
+    db = client[str(os.environ["MONGODB_DATABASE"])]  # connect to database
 
     char_collection = db.charinfo
 
