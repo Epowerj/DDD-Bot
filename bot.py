@@ -25,7 +25,7 @@ def load_info():
     client = MongoClient(str(os.environ["MONGODB_URI"]))  # connect to the server
     db = client[str(os.environ["MONGODB_DATABASE"])]  # connect to database
 
-    char_collection = db.charinfo
+    char_collection = db.charinfo  # select collection
 
     char_info = char_collection.find_one()
     print(char_info)
@@ -39,7 +39,7 @@ def save_info():
     global next_action
     global db
 
-    db.charinfo.insert_one(char_info)
+    db.charinfo.update(char_info)
 
 
 def start(bot, update):
