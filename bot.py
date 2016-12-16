@@ -30,6 +30,9 @@ def load_info():
     char_info = char_collection.find_one()
     print(char_info)
 
+    if char_info is None:
+        char_info = {}
+
 
 def save_info():
     global char_info
