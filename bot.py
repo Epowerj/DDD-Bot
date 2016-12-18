@@ -26,12 +26,18 @@ def load_info():
     db = client[str(os.environ["MONGODB_DATABASE"])]  # connect to database
 
     char_collection = db.charinfo  # select collection
+    action_collection = db.actions
 
     char_info = char_collection.find_one()
     print(char_info)
+    next_action = action_collection.find_one()
+    print(next_action)
 
     if char_info is None:
         char_info = {}
+
+    if next_action is None:
+        next_action = {}
 
 
 def save_info():
@@ -39,7 +45,9 @@ def save_info():
     global next_action
     global db
 
-    db.charinfo.update(char_info)
+    db.charinfo.update(char_info, db.charinfo.find_one().get('_id'), upsert=True)  # missing arguments?
+    db.actions.update(next_action, db.actions.find_one().get('_id'), upsert=True)
+
 
 
 def start(bot, update):
@@ -59,7 +67,7 @@ def time(bot, update):
 
 
 def roll(bot, update):
-   action(bot, update, random.randint(1, 20))
+    action(bot, update, random.randint(1, 20))
 
 
 def qroll(bot, update):
