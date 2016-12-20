@@ -87,6 +87,7 @@ def say(bot, update):
     if update.message.from_user.id == admin_id:
         commandtext = update.message.text.split(' ', 1)
         bot.sendMessage(chatroom_id, text=commandtext[1])
+        bot.sendMessage(int(os.environ["DDDCHANNEL"]), text=commandtext[1])
     else:
         bot.sendMessage(update.message.chat_id, text="You are not authorized")
 
