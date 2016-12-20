@@ -45,9 +45,8 @@ def save_info():
     global next_action
     global db
 
-    db.charinfo.update(db.charinfo.find_one().get('_id'), char_info, upsert=True)
-    db.actions.update(db.actions.find_one().get('_id'), next_action, upsert=True)
-
+    db.charinfo.update({}, char_info, upsert=True)
+    db.actions.update({}, next_action, upsert=True)
 
 
 def start(bot, update):
@@ -142,8 +141,9 @@ def action(bot, update, roll=-1):
 def setinfo(bot, update):
     global char_info
 
-    if update.message.from_user.id == admin_id:
+    if update.message.from_user.id == admin_id:  # if admin
         commandtext = update.message.text.split(' ', 2)
+
         char_info[commandtext[1].lower()] = commandtext[2]
 
         save_info()
