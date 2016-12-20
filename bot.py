@@ -45,8 +45,8 @@ def save_info():
     global next_action
     global db
 
-    db.charinfo.update(char_info, db.charinfo.find_one().get('_id'), upsert=True)  # missing arguments?
-    db.actions.update(next_action, db.actions.find_one().get('_id'), upsert=True)
+    db.charinfo.update(db.charinfo.find_one().get('_id'), char_info, upsert=True)
+    db.actions.update(db.actions.find_one().get('_id'), next_action, upsert=True)
 
 
 
