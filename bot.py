@@ -82,6 +82,13 @@ def chatinfo(bot, update):
 def error(bot, update, error):
     print('Update "%s" caused error "%s"' % (update, error))
 
+def qsay(bot, update):
+    if update.message.from_user.id == admin_id:
+        commandtext = update.message.text.split(' ', 1)
+        bot.sendMessage(chatroom_id, text=commandtext[1])
+        #bot.sendMessage(int(os.environ["DDDCHANNEL"]), text=commandtext[1])
+    else:
+        bot.sendMessage(update.message.chat_id, text="You are not authorized")
 
 def say(bot, update):
     if update.message.from_user.id == admin_id:
@@ -203,6 +210,7 @@ def main():
     dp.add_handler(CommandHandler("qroll", qroll))
     dp.add_handler(CommandHandler("chatinfo", chatinfo))
     dp.add_handler(CommandHandler("say", say))
+    dp.add_handler(CommandHandler("qsay", qsay))
     dp.add_handler(CommandHandler("info", info))
     dp.add_handler(CommandHandler("action", action))
     dp.add_handler(CommandHandler("setinfo", setinfo))
