@@ -94,9 +94,9 @@ def croll(bot, update):
         commandtext = update.message.text.split(' ', 2)
 
         roll = random.randint(1, int(commandtext[1]))
-        action = str(commandtext[2])
+        command = str(commandtext[2])
 
-        update.message.text = commandtext[0] + " " + commandtext[1] + " " + commandtext[2]
+        update.message.text = commandtext[0] + " " + commandtext[2]
 
         action(bot, update, roll)
     else:
