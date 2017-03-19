@@ -87,6 +87,23 @@ def qroll(bot, update):
         bot.sendMessage(update.message.chat_id, text="Usage: /qroll <die size>")
 
 
+def croll(bot, update):
+    commandtext = update.message.text.split(' ')
+
+    if len(commandtext) >= 3:
+        commandtext = update.message.text.split(' ', 2)
+
+        roll = random.randint(1, int(commandtext[1]))
+        action = str(commandtext[2])
+
+        newupdate = update
+        update.message.text = commandtext[0] + " " + commandtext[1] + " " + commandtext[2]
+
+        action(bot, newupdate, roll)
+    else:
+        bot.sendMessage(update.message.chat_id, text="Usage: /croll <die size> <action>")
+
+
 def chatinfo(bot, update):
     bot.sendMessage(update.message.chat_id, text="chat_id is "+str(update.message.chat_id))
     bot.sendMessage(update.message.chat_id, text="user id is "+str(update.message.from_user.id))
@@ -224,6 +241,7 @@ def main():
     dp.add_handler(CommandHandler("roll20", roll20))
     dp.add_handler(CommandHandler("roll", roll))
     dp.add_handler(CommandHandler("qroll", qroll))
+    dp.add_handler(CommandHandler("croll", croll))
     dp.add_handler(CommandHandler("chatinfo", chatinfo))
     dp.add_handler(CommandHandler("say", say))
     dp.add_handler(CommandHandler("qsay", qsay))
