@@ -78,8 +78,13 @@ def roll(bot, update):
 
 
 def qroll(bot, update):
-    roll = random.randint(1, 20)
-    bot.sendMessage(update.message.chat_id, reply_to_message_id=update.message.message_id, text="Your roll was " + str(roll))
+    commandtext = update.message.text.split(' ')
+
+    if len(commandtext) >= 2:
+        roll = random.randint(1, int(commandtext[1]))
+        bot.sendMessage(update.message.chat_id, reply_to_message_id=update.message.message_id, text="Your roll was " + str(roll))
+    else:
+        bot.sendMessage(update.message.chat_id, text="Usage: /qroll <die size>")
 
 
 def chatinfo(bot, update):
