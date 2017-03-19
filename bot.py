@@ -100,7 +100,7 @@ def say(bot, update):
 
 
 def parse(bot, update):
-    print(str(update.message.chat_id))
+    print(str(update.channel_post.chat_id))
     print("Message from " + update.message.from_user.first_name + "(" + str(update.message.from_user.id) + "): " +
           update.message.text + " (" + str(update.message.message_id) + ")")
 
