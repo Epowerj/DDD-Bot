@@ -96,10 +96,9 @@ def croll(bot, update):
         roll = random.randint(1, int(commandtext[1]))
         action = str(commandtext[2])
 
-        newupdate = update
         update.message.text = commandtext[0] + " " + commandtext[1] + " " + commandtext[2]
 
-        action(bot, newupdate, roll)
+        action(bot, update, roll)
     else:
         bot.sendMessage(update.message.chat_id, text="Usage: /croll <die size> <action>")
 
