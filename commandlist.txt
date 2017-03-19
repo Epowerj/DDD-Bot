@@ -1,4 +1,6 @@
 info - See info on a certain subject
 action - Set your action for the turn
 roll - Set your action as well as roll dice
+roll20 - Same as roll
+roll6 - Same as roll, but with a d6
 qroll - Do a quick roll without an action
