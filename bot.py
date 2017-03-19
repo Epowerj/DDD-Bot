@@ -54,7 +54,7 @@ def start(bot, update):
 
 
 def help(bot, update):
-    bot.sendMessage(update.message.chat_id, text='Just ask @Epowerj')
+    bot.sendMessage(update.message.chat_id, text='Just ask @Epowerj. This bet currently uses a dev build.')
 
 
 def ping(bot, update):
