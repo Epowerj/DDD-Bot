@@ -188,7 +188,7 @@ def stats(bot, update):
         else:
             bot.sendMessage(update.message.chat_id, text="No info found on '"+commandtext+"'")
     else:
-        bot.sendMessage(update.message.chat_id, text="Usage: /info <topic>")
+        bot.sendMessage(update.message.chat_id, text="Usage: /stats <topic>")
 
 
 def equips(bot, update):
@@ -204,7 +204,7 @@ def equips(bot, update):
         else:
             bot.sendMessage(update.message.chat_id, text="No info found on '"+commandtext+"'")
     else:
-        bot.sendMessage(update.message.chat_id, text="Usage: /info <topic>")
+        bot.sendMessage(update.message.chat_id, text="Usage: /equips <topic>")
 
 
 def action(bot, update, roll=-1):
