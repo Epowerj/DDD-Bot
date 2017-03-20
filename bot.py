@@ -154,6 +154,7 @@ def say(bot, update):
 
 def parse(bot, update):
     #print(str(update.channel_post.chat_id))
+    print("file: " + str(update.message.document.file_id))
     print("Message from " + update.message.from_user.first_name + "(" + str(update.message.from_user.id) + "): " +
           update.message.text + " (" + str(update.message.message_id) + ")")
 
@@ -287,7 +288,7 @@ def listactions(bot, update):
         for action in next_action:
             bot.sendMessage(update.message.chat_id, text=next_action[action])
     else:
-            bot.sendMessage(update.message.chat_id, text="You are not authorized")
+        bot.sendMessage(update.message.chat_id, text="You are not authorized")
 
 
 def clearactions(bot, update):
