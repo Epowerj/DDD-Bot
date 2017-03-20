@@ -1,4 +1,6 @@
 info - See info on a certain subject
+stats - See stats on a character
+equips - See equips / inventory of a character
 action - Set your action for the turn
 roll - Set your action as well as roll dice
 roll20 - Same as roll
