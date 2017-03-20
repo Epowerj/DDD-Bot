@@ -57,6 +57,10 @@ def help(bot, update):
     bot.sendMessage(update.message.chat_id, text='Just ask @Epowerj. This bot currently uses a dev build.')
 
 
+def adminhelp(bot, update):
+    bot.sendMessage(update.message.chat_id, text='Admin commands: /say <message> /qsay <message> /listactions /clearactions /setinfo <indexword> <description>')
+
+
 def ping(bot, update):
     bot.sendMessage(update.message.chat_id, text='Pong')
 
@@ -234,6 +238,7 @@ def main():
 
     dp.add_handler(CommandHandler("start", start))
     dp.add_handler(CommandHandler("help", help))
+    dp.add_handler(CommandHandler("adminhelp", adminhelp))
     dp.add_handler(CommandHandler("ping", ping))
     dp.add_handler(CommandHandler("time", time))
     dp.add_handler(CommandHandler("roll6", roll6))
