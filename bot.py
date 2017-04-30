@@ -99,9 +99,10 @@ def roll20(bot, update):
 
 def roll(bot, update):
     roll20(bot, update)
+    #TODO add inline buttons
 
 
-def qroll(bot, update):
+def qroll(bot, update): #TODO add more transparency for syntax
     commandtext = update.message.text.split(' ')
 
     if len(commandtext) >= 2:
@@ -111,7 +112,7 @@ def qroll(bot, update):
         bot.sendMessage(update.message.chat_id, text="Usage: /qroll <die size>")
 
 
-def croll(bot, update):
+def croll(bot, update): #TODO add more transparency for syntax
     commandtext = update.message.text.split(' ')
 
     if len(commandtext) >= 3:
@@ -143,7 +144,7 @@ def qsay(bot, update):
     else:
         bot.sendMessage(update.message.chat_id, text="You are not authorized")
 
-def say(bot, update):
+def say(bot, update): #TODO add photo and file support
     if update.message.from_user.id == admin_id:
         commandtext = update.message.text.split(' ', 1)
         bot.sendMessage(chatroom_id, text=commandtext[1])
@@ -159,7 +160,7 @@ def parse(bot, update):
           update.message.text + " (" + str(update.message.message_id) + ")")
 
 
-def info(bot, update):
+def info(bot, update): #TODO add automatic indexing an inline buttons
     global char_info
 
     commandtext = update.message.text.split(' ')
@@ -175,7 +176,7 @@ def info(bot, update):
         bot.sendMessage(update.message.chat_id, text="Usage: /info <topic>")
 
 
-def stats(bot, update):
+def stats(bot, update): #TODO automatic indexing and inline buttons
     global char_stats
 
     commandtext = update.message.text.split(' ')
@@ -191,7 +192,7 @@ def stats(bot, update):
         bot.sendMessage(update.message.chat_id, text="Usage: /stats <topic>")
 
 
-def equips(bot, update):
+def equips(bot, update): #TODO automatic indexing and inline buttons
     global char_equips
 
     commandtext = update.message.text.split(' ')
@@ -207,7 +208,7 @@ def equips(bot, update):
         bot.sendMessage(update.message.chat_id, text="Usage: /equips <topic>")
 
 
-def action(bot, update, roll=-1):
+def action(bot, update, roll=-1): #TODO add support for multiple actions
     global next_action
 
     commandtext = update.message.text.split(' ')
