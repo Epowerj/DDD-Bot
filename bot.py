@@ -313,7 +313,7 @@ def setinventory(bot, update):
 
     commandtext = update.message.text.split(' ', 1)
 
-    char_equips[update.message.from_user.id] = commandtext[1]
+    char_equips[str(update.message.from_user.id)] = commandtext[1]
 
     save_info()
 
