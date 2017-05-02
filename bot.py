@@ -224,7 +224,7 @@ def inventory(bot, update): #TODO automatic indexing and inline buttons
 	#commandtext = update.message.text.split(' ')
 
     #if len(commandtext) >= 2:
-    commandtext = update.message.from_user.id
+    commandtext = str(update.message.from_user.id)
 
     if commandtext in char_inventory:
         bot.sendMessage(update.message.chat_id, text=char_inventory[commandtext])
