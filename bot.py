@@ -221,15 +221,17 @@ def equips(bot, update): #TODO automatic indexing and inline buttons
 def inventory(bot, update): #TODO automatic indexing and inline buttons
     global char_inventory
 
-    if len(commandtext) >= 2:
+	#commandtext = update.message.text.split(' ')
+
+    #if len(commandtext) >= 2:
         commandtext = update.message.from_user.id
 
         if commandtext in char_inventory:
             bot.sendMessage(update.message.chat_id, text=char_inventory[commandtext])
         else:
             bot.sendMessage(update.message.chat_id, text="No info found on '"+commandtext+"'")
-    else:
-        bot.sendMessage(update.message.chat_id, text="Usage: /inventory")
+    #else:
+        #bot.sendMessage(update.message.chat_id, text="Usage: /inventory")
 
 
 def action(bot, update, roll=-1): #TODO add support for multiple actions
