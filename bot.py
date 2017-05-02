@@ -11,6 +11,7 @@ char_info = {}
 next_action = {}
 char_stats = {}
 char_equips = {}
+char_inventory = {}
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -24,6 +25,7 @@ def load_info():
     global next_action
     global char_stats
     global char_equips
+    global char_inventory
     global db
 
     client = MongoClient(str(os.environ["MONGODB_URI"]))  # connect to the server
@@ -33,6 +35,7 @@ def load_info():
     action_collection = db.actions
     stats_collection = db.stats
     equips_collection = db.equips
+    inventory_collection = db.inventory
 
     char_info = char_collection.find_one()
     print(char_info)
@@ -42,6 +45,8 @@ def load_info():
     print(char_stats)
     char_equips = equips_collection.find_one()
     print(char_equips)
+    char_inventory = equips_collection.find_one()
+    print(char_inventory)
 
     if char_info is None:
         char_info = {}
@@ -55,18 +60,23 @@ def load_info():
     if char_equips is None:
         char_equips = {}
 
+    if char_inventory is None:
+        char_inventory = {}
+
 
 def save_info():
     global char_info
     global next_action
     global char_stats
     global char_equips
+    global char_inventory
     global db
 
     db.charinfo.update({}, char_info, upsert=True)
     db.actions.update({}, next_action, upsert=True)
     db.stats.update({}, char_stats, upsert=True)
     db.equips.update({}, char_equips, upsert=True)
+    db.inventory.update({}, char_inventory, upsert=True)
 
 
 def start(bot, update):
@@ -208,6 +218,20 @@ def equips(bot, update): #TODO automatic indexing and inline buttons
         bot.sendMessage(update.message.chat_id, text="Usage: /equips <topic>")
 
 
+def inventory(bot, update): #TODO automatic indexing and inline buttons
+    global char_inventory
+
+    if len(commandtext) >= 2:
+        commandtext = update.message.from_user.id
+
+        if commandtext in char_inventory:
+            bot.sendMessage(update.message.chat_id, text=char_inventory[commandtext])
+        else:
+            bot.sendMessage(update.message.chat_id, text="No info found on '"+commandtext+"'")
+    else:
+        bot.sendMessage(update.message.chat_id, text="Usage: /inventory")
+
+
 def action(bot, update, roll=-1): #TODO add support for multiple actions
     global next_action
 
@@ -282,6 +306,18 @@ def setequips(bot, update):
         bot.sendMessage(update.message.chat_id, text="You are not authorized")
 
 
+def setinventory(bot, update):
+    global char_inventory
+
+    commandtext = update.message.text.split(' ', 1)
+
+    char_equips[update.message.from_user.id] = commandtext[1]
+
+    save_info()
+
+    bot.sendMessage(update.message.chat_id, text="Inventory saved")
+
+
 def listactions(bot, update):
     global next_action
 
@@ -336,10 +372,12 @@ def main():
     dp.add_handler(CommandHandler("info", info))
     dp.add_handler(CommandHandler("stats", stats))
     dp.add_handler(CommandHandler("equips", equips))
+    dp.add_handler(CommandHandler("inventory", inventory))
     dp.add_handler(CommandHandler("action", action))
     dp.add_handler(CommandHandler("setinfo", setinfo))
     dp.add_handler(CommandHandler("setstats", setstats))
     dp.add_handler(CommandHandler("setequips", setequips))
+    dp.add_handler(CommandHandler("setinventory", setinventory))
     dp.add_handler(CommandHandler("listactions", listactions))
     dp.add_handler(CommandHandler("clearactions", clearactions))
 
