@@ -333,7 +333,7 @@ def main():
     dp.add_handler(CommandHandler("qroll", qroll))
     dp.add_handler(CommandHandler("chatinfo", chatinfo))
     dp.add_handler(CommandHandler("say", say))
-    dp.add_handler(CommandHandler("qsay", qsay))
+    #dp.add_handler(CommandHandler("qsay", qsay))
     dp.add_handler(CommandHandler("info", info))
     dp.add_handler(CommandHandler("stats", stats))
     dp.add_handler(CommandHandler("equips", equips))
