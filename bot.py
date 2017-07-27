@@ -13,6 +13,8 @@ char_stats = {}
 char_equips = {}
 char_inventory = {}
 
+waiting_for_music=False
+
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=logging.INFO)
@@ -99,43 +101,16 @@ def time(bot, update):
     bot.sendMessage(update.message.chat_id, text=str(datetime.datetime.now()))
 
 
-def roll6(bot, update):
-    action(bot, update, random.randint(1, 6))
-
-
-def roll20(bot, update):
-    action(bot, update, random.randint(1, 20))
-
+# TODO remake the rolls
 
 def roll(bot, update):
-    roll20(bot, update)
-    #TODO add inline buttons
-
-
-def qroll(bot, update): #TODO add more transparency for syntax
     commandtext = update.message.text.split(' ')
 
     if len(commandtext) >= 2:
         roll = random.randint(1, int(commandtext[1]))
         bot.sendMessage(update.message.chat_id, reply_to_message_id=update.message.message_id, text="Your roll was " + str(roll))
     else:
-        bot.sendMessage(update.message.chat_id, text="Usage: /qroll <die size>")
-
-
-def croll(bot, update): #TODO add more transparency for syntax
-    commandtext = update.message.text.split(' ')
-
-    if len(commandtext) >= 3:
-        commandtext = update.message.text.split(' ', 2)
-
-        roll = random.randint(1, int(commandtext[1]))
-        command = str(commandtext[2])
-
-        update.message.text = commandtext[0] + " " + commandtext[2]
-
-        action(bot, update, roll)
-    else:
-        bot.sendMessage(update.message.chat_id, text="Usage: /croll <die size> <action>")
+        bot.sendMessage(update.message.chat_id, text="")
 
 
 def chatinfo(bot, update):
@@ -234,7 +209,11 @@ def inventory(bot, update): #TODO automatic indexing and inline buttons
         #bot.sendMessage(update.message.chat_id, text="Usage: /inventory")
 
 
-def action(bot, update, roll=-1): #TODO add support for multiple actions
+def send_to_admin(message):
+    bot.sendMessage(admin_id, text=message)
+
+
+def action(bot, update): #TODO add support for multiple actions
     global next_action
 
     commandtext = update.message.text.split(' ')
@@ -242,25 +221,12 @@ def action(bot, update, roll=-1): #TODO add support for multiple actions
     if len(commandtext) >= 2:
         commandtext = update.message.text.split(' ', 1)[1]
 
-        if roll == -1:
-            next_action[str(update.message.from_user.id)] = update.message.from_user.first_name + ' - ' + commandtext
-        else:
-            next_action[str(update.message.from_user.id)] = update.message.from_user.first_name + ' - ' + str(roll) + ' - ' + commandtext
+        send_to_admin("[Action] " + update.message.from_user.first_name + " - " + commandtext)
 
-        save_info()
-
-        if roll == -1:
-            bot.sendMessage(update.message.chat_id, reply_to_message_id=update.message.message_id, text="Action saved")
-        else:
-            if roll == 1:
-                bot.sendMessage(update.message.chat_id, reply_to_message_id=update.message.message_id, text="Your roll was " + str(roll) + "\nGood luck, lol")
-            else:
-                bot.sendMessage(update.message.chat_id, reply_to_message_id=update.message.message_id, text="Your roll was " + str(roll))
+        bot.sendMessage(update.message.chat_id, reply_to_message_id=update.message.message_id, text="Action saved")
+        
     else:
-        if str(update.message.from_user.id) in next_action:
-            bot.sendMessage(update.message.chat_id, reply_to_message_id=update.message.message_id, text="Your current action is: '" + next_action[str(update.message.from_user.id)] + "' \n Do /action <your next move> to update")
-        else:
-            bot.sendMessage(update.message.chat_id, reply_to_message_id=update.message.message_id, text="You have no action currently set")
+        bot.sendMessage(update.message.chat_id, reply_to_message_id=update.message.message_id, text="Usage: /action <your action>")
 
 
 def setinfo(bot, update):
