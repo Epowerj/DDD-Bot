@@ -107,8 +107,10 @@ def roll(bot, update):
     commandtext = update.message.text.split(' ')
 
     if len(commandtext) >= 2:
-        roll = random.randint(1, int(commandtext[1]))
+        roll = random.randint(1, 20)
         bot.sendMessage(update.message.chat_id, reply_to_message_id=update.message.message_id, text="Your roll was " + str(roll))
+
+        send_to_admin(bot, "[Roll " + commandtext + "] " + update.message.from_user.first_name + " - " + str(roll))
     else:
         bot.sendMessage(update.message.chat_id, text="")
 
