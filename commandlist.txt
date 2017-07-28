@@ -3,5 +3,6 @@ stats - See stats on a character
 equips - See equips / inventory of a character
 inventory - See your inventory
 setinventory - Set your inventory
-action - Set your action for the turn
-roll - Set your action as well as roll dice
+action - Do an action
+roll - roll dice
+qroll - roll dice without notifying the DM
