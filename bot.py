@@ -103,16 +103,33 @@ def time(bot, update):
 
 # TODO remake the rolls
 
+def parse_roll(toparse):
+    toparse.lower()
+    toparse = toparse.split('d')
+
+    # check if characters after the 'd' are an integer
+    try:
+        die = int(toparse[1])
+    except ValueError:
+        return False  # it was a string, not an int.
+
+    return random.randint(1, die)
+
+
 def roll(bot, update):
     commandtext = update.message.text.split(' ')
 
     if len(commandtext) >= 2:
-        roll = random.randint(1, 20)
-        bot.sendMessage(update.message.chat_id, reply_to_message_id=update.message.message_id, text="Your roll was " + str(roll))
+        roll = parse_roll(commandtext[1])
+
+        if (roll == False):
+            bot.sendMessage(update.message.chat_id, text="Incorrect Usage \nUsage: /roll d<die size>")
+        else:
+            bot.sendMessage(update.message.chat_id, reply_to_message_id=update.message.message_id, text="Your roll was " + str(roll))
 
         send_to_admin(bot, "[Roll " + commandtext[1] + "] " + update.message.from_user.first_name + " - " + str(roll))
     else:
-        bot.sendMessage(update.message.chat_id, text="")
+        bot.sendMessage(update.message.chat_id, text="Usage: /roll d<die size>")
 
 
 def chatinfo(bot, update):
