@@ -118,7 +118,35 @@ def parse_roll(toparse):
     except ValueError:
         return False  # it was a string, not an int.
 
-    return random.randint(1, die)
+    if (toparse[0] != ''):
+        # check if characters before the 'd' are an integer
+        try:
+            die_amount = int(toparse[0])
+        except ValueError:
+            return False  # it was a string, not an int.
+
+        result_rolls = []
+
+        for range(0, die_amount):
+            result_rolls.append(random.randint(1, die))
+
+        result = ""
+        total_sum = 0
+
+        for value in result_rolls:
+            total_sum += value
+
+            if (result == ""):
+                result += (str(value) + " ")
+            else:
+                result += (" + " str(value))
+
+        result += (" = " + str(total_sum))
+
+        return result
+
+    else:
+        return random.randint(1, die)
 
 
 def roll(bot, update):
