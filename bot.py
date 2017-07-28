@@ -90,7 +90,7 @@ def help(bot, update):
 
 
 def adminhelp(bot, update):
-    bot.sendMessage(update.message.chat_id, text='Admin commands: /say <message> /qsay <message> /listactions /clearactions /setinfo <indexword> <description>')
+    bot.sendMessage(update.message.chat_id, text='Admin commands: /say <message> /qsay <message> /setinfo <indexword> <description> - /setequips, /setinventory, and /setstats work the same as /setinfo')
 
 
 def ping(bot, update):
