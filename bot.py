@@ -107,7 +107,7 @@ def parse_roll(toparse):
     toparse.lower()
 
     # count the number of 'd' characters
-    if (toparse.count('a') != 1):
+    if (toparse.count('d') != 1):
         return False
 
     toparse = toparse.split('d')
