@@ -209,7 +209,7 @@ def inventory(bot, update): #TODO automatic indexing and inline buttons
         #bot.sendMessage(update.message.chat_id, text="Usage: /inventory")
 
 
-def send_to_admin(message):
+def send_to_admin(bot, message):
     bot.sendMessage(admin_id, text=message)
 
 
@@ -221,10 +221,10 @@ def action(bot, update): #TODO add support for multiple actions
     if len(commandtext) >= 2:
         commandtext = update.message.text.split(' ', 1)[1]
 
-        send_to_admin("[Action] " + update.message.from_user.first_name + " - " + commandtext)
+        send_to_admin(bot, "[Action] " + update.message.from_user.first_name + " - " + commandtext)
 
         bot.sendMessage(update.message.chat_id, reply_to_message_id=update.message.message_id, text="Action saved")
-        
+
     else:
         bot.sendMessage(update.message.chat_id, reply_to_message_id=update.message.message_id, text="Usage: /action <your action>")
 
