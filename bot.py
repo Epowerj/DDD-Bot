@@ -126,8 +126,8 @@ def roll(bot, update):
             bot.sendMessage(update.message.chat_id, text="Incorrect Usage \nUsage: /roll d<die size>")
         else:
             bot.sendMessage(update.message.chat_id, reply_to_message_id=update.message.message_id, text="Your roll was " + str(roll))
-
-        send_to_admin(bot, "[Roll " + commandtext[1] + "] " + update.message.from_user.first_name + " - " + str(roll))
+            send_to_admin(bot, "[Roll " + commandtext[1] + "] " + update.message.from_user.first_name + " - " + str(roll))
+            
     else:
         bot.sendMessage(update.message.chat_id, text="Usage: /roll d<die size>")
 
