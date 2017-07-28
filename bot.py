@@ -118,12 +118,20 @@ def parse_roll(toparse):
     except ValueError:
         return False  # it was a string, not an int.
 
+    # check if number is 0 or less
+    if (int(toparse[1]) < 1):
+        return False
+
     if (toparse[0] != ''):
         # check if characters before the 'd' are an integer
         try:
             die_amount = int(toparse[0])
         except ValueError:
             return False  # it was a string, not an int.
+
+        # check if number is 0 or less
+        if (int(toparse[0]) < 1):
+            return False
 
         result_rolls = []
 
