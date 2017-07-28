@@ -105,6 +105,11 @@ def time(bot, update):
 
 def parse_roll(toparse):
     toparse.lower()
+
+    # count the number of 'd' characters
+    if (toparse.count('a') != 1):
+        return False
+
     toparse = toparse.split('d')
 
     # check if characters after the 'd' are an integer
@@ -127,7 +132,7 @@ def roll(bot, update):
         else:
             bot.sendMessage(update.message.chat_id, reply_to_message_id=update.message.message_id, text="Your roll was " + str(roll))
             send_to_admin(bot, "[Roll " + commandtext[1] + "] " + update.message.from_user.first_name + " - " + str(roll))
-            
+
     else:
         bot.sendMessage(update.message.chat_id, text="Usage: /roll d<die size>")
 
