@@ -139,7 +139,7 @@ def parse_roll(toparse):
             if (result == ""):
                 result += (str(value) + " ")
             else:
-                result += (" + " str(value))
+                result += (" + " + str(value))
 
         result += (" = " + str(total_sum))
 
