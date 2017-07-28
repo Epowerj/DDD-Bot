@@ -127,7 +127,7 @@ def parse_roll(toparse):
 
         result_rolls = []
 
-        for range(0, die_amount):
+        for i in range(die_amount):
             result_rolls.append(random.randint(1, die))
 
         result = ""
