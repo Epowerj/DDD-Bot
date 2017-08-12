@@ -1,9 +1,8 @@
 info - See info on a certain subject
 stats - See stats on a character
 equips - See equips / inventory of a character
-action - Set your action for the turn
-roll - Set your action as well as roll dice
-roll20 - Same as roll
-roll6 - Same as roll, but with a d6
-qroll - Do a quick roll without an action
-croll - Custom roll
+inventory - See your inventory
+setinventory - Set your inventory
+action - Do an action
+roll - roll dice
+qroll - roll dice without notifying the DM

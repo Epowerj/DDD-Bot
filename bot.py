@@ -11,6 +11,9 @@ char_info = {}
 next_action = {}
 char_stats = {}
 char_equips = {}
+char_inventory = {}
+
+waiting_for_music=False
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -24,6 +27,7 @@ def load_info():
     global next_action
     global char_stats
     global char_equips
+    global char_inventory
     global db
 
     client = MongoClient(str(os.environ["MONGODB_URI"]))  # connect to the server
@@ -33,6 +37,7 @@ def load_info():
     action_collection = db.actions
     stats_collection = db.stats
     equips_collection = db.equips
+    inventory_collection = db.inventory
 
     char_info = char_collection.find_one()
     print(char_info)
@@ -42,6 +47,8 @@ def load_info():
     print(char_stats)
     char_equips = equips_collection.find_one()
     print(char_equips)
+    char_inventory = equips_collection.find_one()
+    print(char_inventory)
 
     if char_info is None:
         char_info = {}
@@ -55,18 +62,23 @@ def load_info():
     if char_equips is None:
         char_equips = {}
 
+    if char_inventory is None:
+        char_inventory = {}
+
 
 def save_info():
     global char_info
     global next_action
     global char_stats
     global char_equips
+    global char_inventory
     global db
 
     db.charinfo.update({}, char_info, upsert=True)
     db.actions.update({}, next_action, upsert=True)
     db.stats.update({}, char_stats, upsert=True)
     db.equips.update({}, char_equips, upsert=True)
+    db.inventory.update({}, char_inventory, upsert=True)
 
 
 def start(bot, update):
@@ -78,7 +90,7 @@ def help(bot, update):
 
 
 def adminhelp(bot, update):
-    bot.sendMessage(update.message.chat_id, text='Admin commands: /say <message> /qsay <message> /listactions /clearactions /setinfo <indexword> <description>')
+    bot.sendMessage(update.message.chat_id, text='Admin commands: /say <message> /qsay <message> /setinfo <indexword> <description> - /setequips, /setinventory, and /setstats work the same as /setinfo')
 
 
 def ping(bot, update):
@@ -89,42 +101,92 @@ def time(bot, update):
     bot.sendMessage(update.message.chat_id, text=str(datetime.datetime.now()))
 
 
-def roll6(bot, update):
-    action(bot, update, random.randint(1, 6))
+# TODO remake the rolls
 
+def parse_roll(toparse):
+    toparse.lower()
 
-def roll20(bot, update):
-    action(bot, update, random.randint(1, 20))
+    # count the number of 'd' characters
+    if (toparse.count('d') != 1):
+        return False
+
+    toparse = toparse.split('d')
+
+    # check if characters after the 'd' are an integer
+    try:
+        die = int(toparse[1])
+    except ValueError:
+        return False  # it was a string, not an int.
+
+    # check if number is 0 or less
+    if (int(toparse[1]) < 1):
+        return False
+
+    if (toparse[0] != ''):
+        # check if characters before the 'd' are an integer
+        try:
+            die_amount = int(toparse[0])
+        except ValueError:
+            return False  # it was a string, not an int.
+
+        # check if number is 0 or less
+        if (int(toparse[0]) < 1):
+            return False
+
+        result_rolls = []
+
+        for i in range(die_amount):
+            result_rolls.append(random.randint(1, die))
+
+        result = ""
+        total_sum = 0
+
+        for value in result_rolls:
+            total_sum += value
+
+            if (result == ""):
+                result += str(value)
+            else:
+                result += (" + " + str(value))
+
+        result += (" = " + str(total_sum))
+
+        return result
+
+    else:
+        return random.randint(1, die)
 
 
 def roll(bot, update):
-    roll20(bot, update)
+    commandtext = update.message.text.split(' ')
+
+    if len(commandtext) >= 2:
+        roll = parse_roll(commandtext[1])
+
+        if (roll == False):
+            bot.sendMessage(update.message.chat_id, text="Incorrect Usage \nUsage: /roll d<die size>")
+        else:
+            bot.sendMessage(update.message.chat_id, reply_to_message_id=update.message.message_id, text="Your roll was " + str(roll))
+            send_to_admin(bot, update.message.from_user.first_name + "\n[Roll " + commandtext[1] + "]\n> " + str(roll))
+
+    else:
+        bot.sendMessage(update.message.chat_id, text="Usage: /roll d<die size>")
 
 
 def qroll(bot, update):
     commandtext = update.message.text.split(' ')
 
     if len(commandtext) >= 2:
-        roll = random.randint(1, int(commandtext[1]))
-        bot.sendMessage(update.message.chat_id, reply_to_message_id=update.message.message_id, text="Your roll was " + str(roll))
+        roll = parse_roll(commandtext[1])
+
+        if (roll == False):
+            bot.sendMessage(update.message.chat_id, text="Incorrect Usage \nUsage: /roll d<die size>")
+        else:
+            bot.sendMessage(update.message.chat_id, reply_to_message_id=update.message.message_id, text="Your roll was " + str(roll))
+            #send_to_admin(bot, update.message.from_user.first_name + "\n[Roll " + commandtext[1] + "]\n> " + str(roll))
+
     else:
-        bot.sendMessage(update.message.chat_id, text="Usage: /qroll <die size>")
-
-
-def croll(bot, update):
-    commandtext = update.message.text.split(' ')
-
-    if len(commandtext) >= 3:
-        commandtext = update.message.text.split(' ', 2)
-
-        roll = random.randint(1, int(commandtext[1]))
-        command = str(commandtext[2])
-
-        update.message.text = commandtext[0] + " " + commandtext[2]
-
-        action(bot, update, roll)
-    else:
-        bot.sendMessage(update.message.chat_id, text="Usage: /croll <die size> <action>")
+        bot.sendMessage(update.message.chat_id, text="Usage: /roll d<die size>")
 
 
 def chatinfo(bot, update):
@@ -143,7 +205,7 @@ def qsay(bot, update):
     else:
         bot.sendMessage(update.message.chat_id, text="You are not authorized")
 
-def say(bot, update):
+def say(bot, update): #TODO add photo and file support
     if update.message.from_user.id == admin_id:
         commandtext = update.message.text.split(' ', 1)
         bot.sendMessage(chatroom_id, text=commandtext[1])
@@ -159,7 +221,7 @@ def parse(bot, update):
           update.message.text + " (" + str(update.message.message_id) + ")")
 
 
-def info(bot, update):
+def info(bot, update): #TODO add automatic indexing an inline buttons
     global char_info
 
     commandtext = update.message.text.split(' ')
@@ -175,7 +237,7 @@ def info(bot, update):
         bot.sendMessage(update.message.chat_id, text="Usage: /info <topic>")
 
 
-def stats(bot, update):
+def stats(bot, update): #TODO automatic indexing and inline buttons
     global char_stats
 
     commandtext = update.message.text.split(' ')
@@ -191,7 +253,7 @@ def stats(bot, update):
         bot.sendMessage(update.message.chat_id, text="Usage: /stats <topic>")
 
 
-def equips(bot, update):
+def equips(bot, update): #TODO automatic indexing and inline buttons
     global char_equips
 
     commandtext = update.message.text.split(' ')
@@ -207,7 +269,27 @@ def equips(bot, update):
         bot.sendMessage(update.message.chat_id, text="Usage: /equips <topic>")
 
 
-def action(bot, update, roll=-1):
+def inventory(bot, update): #TODO automatic indexing and inline buttons
+    global char_inventory
+
+	#commandtext = update.message.text.split(' ')
+
+    #if len(commandtext) >= 2:
+    commandtext = str(update.message.from_user.id)
+
+    if commandtext in char_inventory:
+        bot.sendMessage(update.message.chat_id, text=char_inventory[commandtext])
+    else:
+        bot.sendMessage(update.message.chat_id, text="No info found on '"+commandtext+"'")
+    #else:
+        #bot.sendMessage(update.message.chat_id, text="Usage: /inventory")
+
+
+def send_to_admin(bot, message):
+    bot.sendMessage(admin_id, text=message)
+
+
+def action(bot, update): #TODO add support for multiple actions
     global next_action
 
     commandtext = update.message.text.split(' ')
@@ -215,25 +297,12 @@ def action(bot, update, roll=-1):
     if len(commandtext) >= 2:
         commandtext = update.message.text.split(' ', 1)[1]
 
-        if roll == -1:
-            next_action[str(update.message.from_user.id)] = update.message.from_user.first_name + ' - ' + commandtext
-        else:
-            next_action[str(update.message.from_user.id)] = update.message.from_user.first_name + ' - ' + str(roll) + ' - ' + commandtext
+        send_to_admin(bot, update.message.from_user.first_name + "\n[Action]\n> " + commandtext)
 
-        save_info()
+        bot.sendMessage(update.message.chat_id, reply_to_message_id=update.message.message_id, text="Action saved")
 
-        if roll == -1:
-            bot.sendMessage(update.message.chat_id, reply_to_message_id=update.message.message_id, text="Action saved")
-        else:
-            if roll == 1:
-                bot.sendMessage(update.message.chat_id, reply_to_message_id=update.message.message_id, text="Your roll was " + str(roll) + "\nGood luck, lol")
-            else:
-                bot.sendMessage(update.message.chat_id, reply_to_message_id=update.message.message_id, text="Your roll was " + str(roll))
     else:
-        if str(update.message.from_user.id) in next_action:
-            bot.sendMessage(update.message.chat_id, reply_to_message_id=update.message.message_id, text="Your current action is: '" + next_action[str(update.message.from_user.id)] + "' \n Do /action <your next move> to update")
-        else:
-            bot.sendMessage(update.message.chat_id, reply_to_message_id=update.message.message_id, text="You have no action currently set")
+        bot.sendMessage(update.message.chat_id, reply_to_message_id=update.message.message_id, text="Usage: /action <your action>")
 
 
 def setinfo(bot, update):
@@ -281,6 +350,18 @@ def setequips(bot, update):
         bot.sendMessage(update.message.chat_id, text="You are not authorized")
 
 
+def setinventory(bot, update):
+    global char_inventory
+
+    commandtext = update.message.text.split(' ', 1)
+
+    char_equips[str(update.message.from_user.id)] = commandtext[1]
+
+    save_info()
+
+    bot.sendMessage(update.message.chat_id, text="Inventory saved")
+
+
 def listactions(bot, update):
     global next_action
 
@@ -324,21 +405,20 @@ def main():
     dp.add_handler(CommandHandler("adminhelp", adminhelp))
     dp.add_handler(CommandHandler("ping", ping))
     dp.add_handler(CommandHandler("time", time))
-    dp.add_handler(CommandHandler("roll6", roll6))
-    dp.add_handler(CommandHandler("roll20", roll20))
     dp.add_handler(CommandHandler("roll", roll))
     dp.add_handler(CommandHandler("qroll", qroll))
-    dp.add_handler(CommandHandler("croll", croll))
     dp.add_handler(CommandHandler("chatinfo", chatinfo))
     dp.add_handler(CommandHandler("say", say))
     dp.add_handler(CommandHandler("qsay", qsay))
     dp.add_handler(CommandHandler("info", info))
     dp.add_handler(CommandHandler("stats", stats))
     dp.add_handler(CommandHandler("equips", equips))
+    dp.add_handler(CommandHandler("inventory", inventory))
     dp.add_handler(CommandHandler("action", action))
     dp.add_handler(CommandHandler("setinfo", setinfo))
     dp.add_handler(CommandHandler("setstats", setstats))
     dp.add_handler(CommandHandler("setequips", setequips))
+    dp.add_handler(CommandHandler("setinventory", setinventory))
     dp.add_handler(CommandHandler("listactions", listactions))
     dp.add_handler(CommandHandler("clearactions", clearactions))
 
