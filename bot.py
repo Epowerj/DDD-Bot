@@ -167,7 +167,11 @@ def roll(bot, update):
             bot.sendMessage(update.message.chat_id, text="Incorrect Usage \nUsage: /roll d<die size>")
         else:
             bot.sendMessage(update.message.chat_id, reply_to_message_id=update.message.message_id, text="Your roll was " + str(roll))
-            send_to_admin(bot, update.message.from_user.first_name + "\n[Roll " + commandtext[1] + "]\n> " + str(roll))
+
+            if update.message.chat_id == chatroom_id:
+                send_to_admin(bot, update.message.from_user.first_name + "\n[Roll " + commandtext[1] + "]\n> " + str(roll))
+            else:
+                send_to_admin(bot, update.message.from_user.first_name + "\n[SECRET Roll " + commandtext[1] + "]\n> " + str(roll))
 
     else:
         bot.sendMessage(update.message.chat_id, text="Usage: /roll d<die size>")
@@ -297,7 +301,10 @@ def action(bot, update): #TODO add support for multiple actions
     if len(commandtext) >= 2:
         commandtext = update.message.text.split(' ', 1)[1]
 
-        send_to_admin(bot, update.message.from_user.first_name + "\n[Action]\n> " + commandtext)
+        if update.message.chat_id == chatroom_id:
+            send_to_admin(bot, update.message.from_user.first_name + "\n[Action]\n> " + commandtext)
+        else:
+            send_to_admin(bot, update.message.from_user.first_name + "\n[SECRET Action]\n> " + commandtext)
 
         bot.sendMessage(update.message.chat_id, reply_to_message_id=update.message.message_id, text="Action saved")
 
