@@ -6,6 +6,7 @@ from urllib.parse import urlparse
 import os, logging, datetime, json, random, time
 from pymongo import MongoClient
 
+# database stuff
 db = 0
 char_info = {}
 next_action = {}
@@ -407,6 +408,7 @@ def main():
                       url_path=TOKEN)
     updater.bot.setWebhook("https://" + str(os.environ.get("APPNAME")) + ".herokuapp.com/" + TOKEN)
 
+    # register command handlers
     dp.add_handler(CommandHandler("start", start))
     dp.add_handler(CommandHandler("help", help))
     dp.add_handler(CommandHandler("adminhelp", adminhelp))
