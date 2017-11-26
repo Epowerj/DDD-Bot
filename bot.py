@@ -1,10 +1,14 @@
+import datetime
+import logging
+import os
+import random
+import time
 
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackQueryHandler
-#from telegram import InlineKeyboardButton, InlineKeyboardMarkup
-from key import apikey, admin_id, chatroom_id, table_name
-from urllib.parse import urlparse
-import os, logging, datetime, json, random, time
 from pymongo import MongoClient
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
+
+# from telegram import InlineKeyboardButton, InlineKeyboardMarkup
+from key import apikey, admin_id, chatroom_id
 
 # database stuff
 db = 0
